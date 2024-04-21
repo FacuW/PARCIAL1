@@ -1,0 +1,10 @@
+ // ir a git bash en la terminal (flechita al lado del +) y ejecutar desde ahi con el comando:
+
+ 
+ g++ -o PARCIAL1 PARCIAL1.cpp -Iinclude && ./PARCIAL1
+
+
+ g++ -o prueba prueba.cpp -Iinclude && ./prueba
+
+
+ g++ -o main main.cpp -Iinclude && ./main
