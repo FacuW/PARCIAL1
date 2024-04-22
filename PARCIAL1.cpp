@@ -250,7 +250,7 @@ template <class T> class Pila:public Lista<T>
              T tope(void){return this->cabeza();};
              void desapilar(void){this->borrar();};
              bool pilavacia(){return this->esvacia();};
-             void comprobarKV(Pila<char> pila);
+             bool comprobarKV(Pila<char> pila);
 };                  
 
 template <class T> class Cola :public Lista<T> 
@@ -268,9 +268,53 @@ public:
 };
 
 template <class T>
-void Pila<T>::comprobarKV(Pila<char> pila)
+bool Pila<T>::comprobarKV(Pila<char> pila)
 {
-  int s = pila.size();
+   Pila<char> aux = Pila<char>();
+   if (pila.size() < 6)
+   {
+        return false;
+   }
+   // Verificar que la expresión comience y termine con comillas dobles
+    if (pila.top() == ',' && pila.getnext() == '"' )
+    {
+       aux.apilar(pila.top());
+       pila.desapilar;
+       aux.apilar(pila.top());
+       pila.desapilar;
+        while (pila.top()!= '"' )
+        {
+            aux.apilar(pila.top);
+            pila.desapilar;
+        }
+       if(pila.top()=='"' && pila.getnext() == ':' && pila.getnext()+1 == '"')
+       {
+            aux.apilar(pila.top());
+            pila.desapilar;
+            aux.apilar(pila.top());
+            pila.desapilar;
+            aux.apilar(pila.top());
+            pila.desapilar;
+        }else {return false;}
+        while (pila.top()!= '"')
+        {
+            aux.apilar(pila.top);
+            pila.desapilar;
+        } 
+        aux.apilar(pila.top);
+        pila.desapilar;
+        if(pila.size()>0)
+        {
+            return false; 
+        }else
+        {
+            //metodo de la cola 
+            return true;
+        }
+
+    } 
+    return false;
+         
 }
 
 string eliminarEspacios()
@@ -347,7 +391,7 @@ int main()
     Pila<char> kV = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:Value           (kV)
     Pila<char> kL = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:[List]          (kL)
     Pila<char> kS = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:{Subexpresión}  (kS)
-
+    
     Cola<string> cola = Cola<string>();  // puntero al Buffer que contendra strings, donde cada uno es una subexpresión JSON
 
     string cadena_json = eliminarEspacios();  
