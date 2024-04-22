@@ -250,8 +250,28 @@ template <class T> class Pila:public Lista<T>
              T tope(void){return this->cabeza();};
              void desapilar(void){this->borrar();};
              bool pilavacia(){return this->esvacia();};
+             void comprobarKV(Pila<char> pila);
 };                  
 
+template <class T> class Cola :public Lista<T> 
+{
+public:
+    Cola(void) { Lista<T>(); };
+    //~Cola(void);
+    T tope() { return this->last(); };
+    bool colavacia(void) { return this->esvacia(); };
+    void encolar(T a) { this->add(a); };
+    void desencolar(void) { this->borrar_last(); };
+    T ultimo(void) { return this->cabeza(); };
+    string imprimir(string s) { return this->toPrint(s); };
+    
+};
+
+template <class T>
+void Pila<T>::comprobarKV(Pila<char> pila)
+{
+  int s = pila.size();
+}
 
 string eliminarEspacios()
 {
@@ -281,7 +301,6 @@ string eliminarEspacios()
             singleline_json += c;
         }
     }
-    
     
     // Creamos un string similar a singleline_json pero eliminando todos los 
     // espacios existentes despues de cada coma, cada '{' y '['
@@ -315,9 +334,6 @@ string eliminarEspacios()
             }
     }
 
-    // imprimo la nueva cadena
-    // cout << "la cadena JSON es = " << cadena_json;  // esto es una prueba de funcionamiento
-
     // Cerrar el archivo
     file.close();
 
@@ -325,20 +341,117 @@ string eliminarEspacios()
 }
 
 
-int main()
+int main() 
 {
 
-    Pila<char>* p = new Pila<char>();
+    Pila<char> kV = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:Value           (kV)
+    Pila<char> kL = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:[List]          (kL)
+    Pila<char> kS = Pila<char>();  // puntero a una pila que contenga caracteres de una subexpresión Key:{Subexpresión}  (kS)
 
-    string cadena_json = eliminarEspacios();
+    Cola<string> cola = Cola<string>();  // puntero al Buffer que contendra strings, donde cada uno es una subexpresión JSON
+
+    string cadena_json = eliminarEspacios();  
     
     cout << "la cadena JSON es = " << cadena_json;
-    
-    return 0;
 
-    /*
+
+    if (cadena_json.at(0) == '{')      // comprobamos si el primer caracter de la cadena JSON es '{'
+        {
+            string caracter = "";           
+            char c = cadena_json.at(0);
+            caracter += c;
+            cola.encolar(caracter); 
+
+            int tipoPila;
+            string subexp;             // String que va a guardar una subexpresion y se va a ir limpiando para guardar la siguiente
+            int error = false;
+
+            for (int i = 1; (i < cadena_json.length()) && (!error); i++)
+            {
+                subexp += cadena_json.at(i);
+
+                if(cadena_json.at(i) == ':')
+                {
+                    if(cadena_json.at(i+1) == '"')
+                    {
+                        tipoPila = 1;
+                    }
+                    else if(cadena_json.at(i+1) == '[')
+                    {
+                        tipoPila = 2;
+                    }
+                    else if(cadena_json.at(i+1) == '{')
+                    {
+                        tipoPila = 3;
+                    }
+                    else
+                    {
+                        cout << "Error";
+                        return 0;
+                    }
+                }
+                
+                if(cadena_json.at(i) == ',')
+                {
+                    if (tipoPila == 1)
+                    {
+                        if(cadena_json.at(i-1) == '"')
+                        {
+                            for(int j = 0;(j < subexp.length()) && (!error); j++ )
+                            {
+                                kV.apilar(subexp.at(j));
+                            }
+                            
+                            subexp = "";
+                        }
+                        else
+                        {
+                            cout << "Error";
+                            return 0;
+                        }
+                    }
+                    else if (tipoPila == 2)
+                    {
+                        if(cadena_json.at(i-1) == ']')
+                        {
+                            for(int k = 0;(k < subexp.length()) && (!error); k++ )
+                            {
+                                kL.apilar(subexp.at(k));
+                            }
+                            
+                            subexp = "";
+                        }
+                      
+                    }
+                    else if (tipoPila == 3)
+                    {
+                        if(cadena_json.at(i-1) == '}')
+                        {
+                            for(int n = 0;(n < subexp.length()) && (!error); n++ )
+                            {
+                                kL.apilar(subexp.at(n));
+                            }
+                            
+                            subexp = "";
+                        }
+                      
+                    }
+                }
+
+            }
+
+        }
+        else
+        {
+            cout << "Error";
+            return 0;
+        }
+
+
+    return 0;
     
-    cout << endl << "Ingrese cadena = "; cin >> cadena;
+    
+   /*cout << endl << "Ingrese cadena = "; cin >> cadena;
     int error = false;
     for (int i = 0; (i < cadena.length()) && (!error); i++) {
         if (cadena.at(i) == '{') p->apilar('{');
@@ -366,13 +479,11 @@ int main()
     }//fin for i
     if ((!error) && p->pilavacia())cout << endl << "Todo OK";
     else cout << endl << "ERROR";
-    
-    
-
-    cout << endl << endl;
-    system("PAUSE");
-    return EXIT_SUCCESS;
-
     */
+    
+   
+    //cout << endl << endl;
+    //system("PAUSE");
+    //return EXIT_SUCCESS;
 
 }
