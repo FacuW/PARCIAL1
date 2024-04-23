@@ -1,2 +1,0 @@
-Este es nacho probando hacer un commit en github desde vscode
-Que capos que son los que hacen los tps de algoritmos
