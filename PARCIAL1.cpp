@@ -276,33 +276,36 @@ bool Pila<T>::comprobarKV(Pila<char> pila)
         return false;
    }
    // Verificar que la expresión comience y termine con comillas dobles
-    if (pila.top() == ',' && pila.getnext() == '"' )
+    if (pila.tope() == ',' && pila.getnext() == '"' )
     {
+       aux.apilar(pila.tope());
+       pila.desapilar();
        aux.apilar(pila.top());
-       pila.desapilar;
-       aux.apilar(pila.top());
-       pila.desapilar;
+       pila.desapilar();
         while (pila.top()!= '"' )
         {
-            aux.apilar(pila.top);
-            pila.desapilar;
+            aux.apilar(pila.tope());
+            pila.desapilar();
         }
-       if(pila.top()=='"' && pila.getnext() == ':' && pila.getnext()+1 == '"')
+       if(pila.top()=='"' && pila.getnext() == ':' )
        {
-            aux.apilar(pila.top());
-            pila.desapilar;
-            aux.apilar(pila.top());
-            pila.desapilar;
-            aux.apilar(pila.top());
-            pila.desapilar;
-        }else {return false;}
-        while (pila.top()!= '"')
+            aux.apilar(pila.tope());
+            pila.desapilar();
+            aux.apilar(pila.tope());
+            pila.desapilar();
+            if( pila.tope() == '"')
+            {
+                aux.apilar(pila.tope());
+                pila.desapilar();
+            }else if {return false;};
+        }
+        while (pila.tope()!= '"')
         {
-            aux.apilar(pila.top);
-            pila.desapilar;
-        } 
-        aux.apilar(pila.top);
-        pila.desapilar;
+            aux.apilar(pila.tope());
+            pila.desapilar();
+        }
+        aux.apilar(pila.tope());
+        pila.desapilar();
         if(pila.size()>0)
         {
             return false; 
@@ -316,7 +319,6 @@ bool Pila<T>::comprobarKV(Pila<char> pila)
     return false;
          
 }
-
 string eliminarEspacios()
 {
    // Creamos un string que contiene solo el nombre del archivo JSON que queremos leer
